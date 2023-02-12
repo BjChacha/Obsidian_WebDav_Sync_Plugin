@@ -4,10 +4,16 @@ import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Set
 
 interface MyPluginSettings {
 	mySetting: string;
+	webdavUrl: string;
+	webdavAccount: string;
+	webdavPassword: string;
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: 'default'
+	mySetting: 'default',
+	webdavUrl: '',
+	webdavAccount: '',
+	webdavPassword: ''
 }
 
 export default class MyPlugin extends Plugin {
@@ -17,9 +23,9 @@ export default class MyPlugin extends Plugin {
 		await this.loadSettings();
 
 		// This creates an icon in the left ribbon.
-		const ribbonIconEl = this.addRibbonIcon('dice', 'Sample Plugin', (evt: MouseEvent) => {
+		const ribbonIconEl = this.addRibbonIcon('dice', 'Webdav Sync', (evt: MouseEvent) => {
 			// Called when the user clicks the icon.
-			new Notice('This is a notice!');
+			new Notice('This is my webdav sync plugin!!!');
 		});
 		// Perform additional things with the ribbon
 		ribbonIconEl.addClass('my-plugin-ribbon-class');
@@ -120,18 +126,56 @@ class SampleSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
+		// webdav info input
+		containerEl.createEl('h2', {text: 'Webdav Information.'});
 
+		// Webdav url
 		new Setting(containerEl)
-			.setName('Setting #1')
-			.setDesc('It\'s a secret')
+			.setName('Webdav Url')
+			.setDesc('Enter the url of your webdav service')
 			.addText(text => text
-				.setPlaceholder('Enter your secret')
-				.setValue(this.plugin.settings.mySetting)
+				.setPlaceholder('Enter the url of your webdav service')
+				.setValue(this.plugin.settings.webdavUrl)
 				.onChange(async (value) => {
 					console.log('Secret: ' + value);
-					this.plugin.settings.mySetting = value;
+					this.plugin.settings.webdavUrl = value;
 					await this.plugin.saveSettings();
 				}));
+
+		// Webdav account
+		new Setting(containerEl)
+			.setName('Webdav Account')
+			.setDesc('Enter the account of your webdav service')
+			.addText(text => text
+				.setPlaceholder('Enter the account of your webdav service')
+				.setValue(this.plugin.settings.webdavAccount)
+				.onChange(async (value) => {
+					console.log('Secret: ' + value);
+					this.plugin.settings.webdavAccount = value;
+					await this.plugin.saveSettings();
+				}));
+
+		// Webdav password
+		new Setting(containerEl)
+			.setName('Webdav Password')
+			.setDesc('Enter the password of your webdav service')
+			.addText(text => text
+				.setPlaceholder('Enter the account of your webdav service')
+				.setValue(this.plugin.settings.webdavPassword)
+				.onChange(async (value) => {
+					console.log('Secret: ' + value);
+					this.plugin.settings.webdavPassword = value;
+					await this.plugin.saveSettings();
+				}));
+
+		// manual sync button
+		containerEl.createEl('h2', {text: 'Sync.'});
+		
+		new Setting(containerEl)
+			.setName('Upload')
+			.setDesc("Manual upload files")
+			.addButton(button => button
+				.setButtonText('Upload')
+				);
 	}
 }
