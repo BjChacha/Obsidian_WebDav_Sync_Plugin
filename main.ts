@@ -1,4 +1,5 @@
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { test } from 'api/webdav';
 
 // Remember to rename these classes and interfaces!
 
@@ -176,6 +177,10 @@ class SampleSettingTab extends PluginSettingTab {
 			.setDesc("Manual upload files")
 			.addButton(button => button
 				.setButtonText('Upload')
-				);
+				.onClick(async (value) => {
+					console.log("upload button is clicked.");
+					new Notice('Upload failed');
+					test();
+				}));
 	}
 }
