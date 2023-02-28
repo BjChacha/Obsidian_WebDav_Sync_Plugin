@@ -8,7 +8,7 @@ import {
 	PluginSettingTab,
 	Setting,
 } from "obsidian";
-import { test } from "api/webdav";
+import { test, webdavVerify } from "api/webdav";
 import { WebdavData } from "interface";
 
 // Remember to rename these classes and interfaces!
@@ -206,8 +206,14 @@ class SampleSettingTab extends PluginSettingTab {
 				button
 					.setButtonText("Check Connecttion")
 					.onClick(async (value) => {
-						const res = await test();
-						console.log(res);
+						const webdav: WebdavData = {
+							url: this.plugin.settings.webdavUrl,
+							account: this.plugin.settings.webdavAccount,
+							password: this.plugin.settings.webdavPassword,
+						};
+
+						const res = await webdavVerify(webdav);
+						console.log({ res });
 						new Notice("check failed");
 					})
 			);
